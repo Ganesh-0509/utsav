@@ -7,9 +7,15 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "firebase/app": fileURLToPath(new URL("./node_modules/@firebase/app/dist/esm/index.esm.js", import.meta.url)),
-      "firebase/auth": fileURLToPath(new URL("./node_modules/@firebase/auth/dist/esm/index.js", import.meta.url)),
-      "firebase/firestore": fileURLToPath(new URL("./node_modules/@firebase/firestore/dist/index.esm.js", import.meta.url)),
+      "firebase/app": fileURLToPath(
+        new URL("./node_modules/@firebase/app/dist/esm/index.esm.js", import.meta.url),
+      ),
+      "firebase/auth": fileURLToPath(
+        new URL("./node_modules/@firebase/auth/dist/esm/index.js", import.meta.url),
+      ),
+      "firebase/firestore": fileURLToPath(
+        new URL("./node_modules/@firebase/firestore/dist/index.esm.js", import.meta.url),
+      ),
     },
   },
   test: {
