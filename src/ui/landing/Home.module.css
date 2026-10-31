@@ -1,0 +1,521 @@
+/* ---------- Hero: the night street ---------- */
+.hero {
+  position: relative;
+  min-height: calc(100svh - 64px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(120% 80% at 50% 0%, #141a4d 0%, transparent 60%), var(--night);
+}
+.hero :global(.street-canvas) {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Darkest where the words sit (lower left); the lane stays bright where the lights converge. */
+  background:
+    linear-gradient(90deg, rgb(6 5 22 / 88%) 0%, rgb(6 5 22 / 55%) 34%, rgb(6 5 22 / 0%) 62%),
+    linear-gradient(0deg, rgb(7 10 34 / 100%) 0%, rgb(7 10 34 / 40%) 22%, rgb(7 10 34 / 0%) 45%);
+}
+.heroInner {
+  padding-block: 10rem 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 860px);
+  gap: 1.25rem;
+}
+.title {
+  font-size: clamp(2.4rem, 4.9vw, 4.6rem);
+  line-height: 0.98;
+  max-width: 22ch;
+  margin: 0;
+  text-shadow: 0 4px 40px rgb(7 10 34 / 90%);
+}
+.lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  color: var(--ink-2);
+  max-width: 52ch;
+  margin: 0;
+  text-shadow: 0 2px 18px rgb(7 10 34 / 95%);
+}
+.doorway {
+  position: relative;
+  max-width: 560px;
+  background: rgb(13 18 54 / 82%);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wire-bright);
+  border-radius: 22px 22px 18px 18px;
+  padding: 1.4rem;
+  box-shadow:
+    0 -1px 0 rgb(255 183 3 / 60%),
+    0 -18px 50px -20px rgb(255 183 3 / 55%),
+    var(--lift);
+}
+/* The lit lintel above the doorway. */
+.doorway::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--amber),
+    var(--warm),
+    var(--amber),
+    transparent
+  );
+}
+.doorway form {
+  display: grid;
+  gap: 0.6rem;
+}
+.doorLabel {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+/* ---------- Demo: one strand per function ---------- */
+.demo {
+  padding-block: 6rem 4rem;
+  border-top: 1px solid var(--wire);
+  background: linear-gradient(180deg, var(--night) 0%, #0a0e2c 100%);
+}
+.demoGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 3rem;
+  align-items: start;
+}
+.demoIntro {
+  position: sticky;
+  top: 6rem;
+}
+.demoIntro p {
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+.demoLabel {
+  display: inline-block;
+  font-size: 0.9rem;
+  border: 1px dashed var(--wire-bright);
+  border-radius: 999px;
+  padding: 0.2rem 0.8rem;
+}
+.strands {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.strandRow {
+  border: 1px solid var(--wire);
+  border-radius: var(--radius);
+  background: rgb(18 24 69 / 70%);
+  transition:
+    border-color 0.3s var(--ease-out),
+    background-color 0.3s var(--ease-out);
+}
+.strandRow:hover,
+.strandRow:focus-within {
+  border-color: var(--wire-bright);
+  background: rgb(26 33 87 / 80%);
+}
+.strandButton {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem 1rem;
+  padding: 1rem 1.2rem 1.1rem;
+  border-radius: var(--radius);
+}
+.strandButton:focus-visible {
+  outline: 2px solid var(--warm);
+  outline-offset: 2px;
+}
+.strandButton > :last-child {
+  grid-column: 1 / -1;
+}
+.strandName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.strandBudget {
+  color: var(--amber);
+  font-weight: 600;
+  align-self: center;
+}
+.strandTasks {
+  list-style: none;
+  margin: 0;
+  padding: 0 1.2rem;
+  overflow: hidden;
+  color: var(--ink-2);
+}
+.strandTasks li {
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--wire);
+}
+.strandTasks li:last-child {
+  padding-bottom: 1rem;
+}
+
+/* ---------- Features ---------- */
+.features {
+  padding-block: 5rem 4rem;
+}
+.featuresHead h2 {
+  max-width: 22ch;
+}
+/* Features hang as tags from one wire; their bulbs come on as the wire scrolls into view. */
+.featureStrand {
+  list-style: none;
+  margin: 0;
+  padding: 2.4rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.75rem 1.75rem;
+  position: relative;
+}
+.featureStrand::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  right: -1rem;
+  top: 0;
+  height: 30px;
+  border-bottom: 1.5px solid var(--wire-bright);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+.featureTag {
+  position: relative;
+}
+.featureTag h3 {
+  margin: 0.8rem 0 0.3em;
+}
+.featureTag p {
+  color: var(--ink-2);
+  margin: 0;
+}
+.featureBulb {
+  position: absolute;
+  top: -1.6rem;
+  left: 1.2rem;
+  width: 12px;
+  height: 17px;
+  border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+  background: #262c5c;
+  border: 1px solid #3a4180;
+  transition:
+    background-color 0.5s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+.featureStrand + .featureStrand {
+  margin-top: 3.5rem;
+}
+.featureIcon {
+  display: block;
+  color: var(--ink-3);
+  transition:
+    color 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out);
+}
+.featureStrand[data-lit] .featureBulb {
+  background: var(--amber);
+  border-color: #ffd36b;
+  box-shadow: 0 4px 16px rgb(255 183 3 / 80%);
+}
+.featureStrand[data-lit] .featureTag:nth-child(3n + 2) .featureBulb {
+  background: var(--rani);
+  border-color: #ff8db4;
+  box-shadow: 0 4px 16px rgb(255 79 139 / 80%);
+  transition-delay: 0.15s;
+}
+.featureStrand[data-lit] .featureTag:nth-child(3n + 3) .featureBulb {
+  background: var(--leaf);
+  border-color: #8af5c9;
+  box-shadow: 0 4px 16px rgb(46 229 157 / 75%);
+  transition-delay: 0.3s;
+}
+.featureStrand[data-lit] .featureIcon {
+  color: var(--amber);
+}
+
+/* ---------- Languages and how it works ---------- */
+.langs {
+  padding-block: 6rem;
+  border-block: 1px solid var(--wire);
+  background:
+    radial-gradient(60% 80% at 80% 20%, rgb(255 79 139 / 12%), transparent 70%),
+    radial-gradient(50% 60% at 10% 90%, rgb(46 229 157 / 9%), transparent 70%), #0a0e2c;
+}
+.langBody {
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+.scripts {
+  list-style: none;
+  margin: 2.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.script0 {
+  color: var(--amber);
+}
+.script1 {
+  color: var(--rani);
+}
+.script2 {
+  color: var(--leaf);
+}
+.script3 {
+  color: var(--warm);
+}
+.how {
+  list-style: none;
+  margin: 3rem 0 0;
+  padding: 2.2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  position: relative;
+}
+/* One wire across the three steps. */
+.how::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 22px;
+  border-bottom: 1.5px solid var(--wire-bright);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+.how p {
+  color: var(--ink-2);
+}
+.howBulb {
+  display: block;
+  width: 16px;
+  height: 22px;
+  margin-bottom: 1rem;
+  border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+  background: var(--amber);
+  box-shadow: 0 4px 18px rgb(255 183 3 / 70%);
+}
+.how li:nth-child(2) .howBulb {
+  background: var(--rani);
+  box-shadow: 0 4px 18px rgb(255 79 139 / 70%);
+}
+.how li:nth-child(3) .howBulb {
+  background: var(--leaf);
+  box-shadow: 0 4px 18px rgb(46 229 157 / 70%);
+}
+
+/* ---------- Close: the street relights ---------- */
+.reprise {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 18px;
+  margin-bottom: 3rem;
+}
+.reprise::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 34px;
+  border-bottom: 1.5px solid var(--wire-bright);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+.reprise span {
+  position: relative;
+  width: 12px;
+  height: 17px;
+  border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%;
+  background: #262c5c;
+  border: 1px solid #3a4180;
+  transition:
+    background-color 0.4s var(--ease-out),
+    box-shadow 0.5s var(--ease-out);
+}
+.reprise span:nth-child(n + 5):nth-last-child(n + 5) {
+  top: 8px;
+}
+.reprise span:nth-child(n + 9):nth-last-child(n + 9) {
+  top: 13px;
+}
+.reprise[data-lit] span {
+  background: var(--amber);
+  box-shadow: 0 4px 14px rgb(255 183 3 / 80%);
+}
+.reprise[data-lit] span:nth-child(4n + 2) {
+  background: var(--rani);
+  box-shadow: 0 4px 14px rgb(255 79 139 / 80%);
+}
+.reprise[data-lit] span:nth-child(4n + 3) {
+  background: var(--leaf);
+  box-shadow: 0 4px 14px rgb(46 229 157 / 75%);
+}
+.reprise[data-lit] span:nth-child(4n) {
+  background: var(--warm);
+  box-shadow: 0 4px 14px rgb(255 243 214 / 75%);
+}
+.reprise[data-lit] span:nth-child(1) {
+  transition-delay: 0s;
+}
+.reprise[data-lit] span:nth-child(2) {
+  transition-delay: 0.06s;
+}
+.reprise[data-lit] span:nth-child(3) {
+  transition-delay: 0.12s;
+}
+.reprise[data-lit] span:nth-child(4) {
+  transition-delay: 0.18s;
+}
+.reprise[data-lit] span:nth-child(5) {
+  transition-delay: 0.24s;
+}
+.reprise[data-lit] span:nth-child(6) {
+  transition-delay: 0.3s;
+}
+.reprise[data-lit] span:nth-child(7) {
+  transition-delay: 0.36s;
+}
+.reprise[data-lit] span:nth-child(8) {
+  transition-delay: 0.42s;
+}
+.reprise[data-lit] span:nth-child(9) {
+  transition-delay: 0.48s;
+}
+.reprise[data-lit] span:nth-child(10) {
+  transition-delay: 0.54s;
+}
+.reprise[data-lit] span:nth-child(11) {
+  transition-delay: 0.6s;
+}
+.reprise[data-lit] span:nth-child(12) {
+  transition-delay: 0.66s;
+}
+.reprise[data-lit] span:nth-child(13) {
+  transition-delay: 0.72s;
+}
+.reprise[data-lit] span:nth-child(14) {
+  transition-delay: 0.78s;
+}
+.reprise[data-lit] span:nth-child(15) {
+  transition-delay: 0.84s;
+}
+.reprise[data-lit] span:nth-child(16) {
+  transition-delay: 0.9s;
+}
+.reprise[data-lit] span:nth-child(17) {
+  transition-delay: 0.96s;
+}
+.reprise[data-lit] span:nth-child(18) {
+  transition-delay: 1.02s;
+}
+.reprise[data-lit] span:nth-child(19) {
+  transition-delay: 1.08s;
+}
+.reprise[data-lit] span:nth-child(20) {
+  transition-delay: 1.14s;
+}
+.reprise[data-lit] span:nth-child(21) {
+  transition-delay: 1.2s;
+}
+.reprise[data-lit] span:nth-child(22) {
+  transition-delay: 1.26s;
+}
+.reprise[data-lit] span:nth-child(23) {
+  transition-delay: 1.32s;
+}
+.reprise[data-lit] span:nth-child(24) {
+  transition-delay: 1.38s;
+}
+
+/* ---------- Close ---------- */
+.close {
+  padding-block: 5rem 4rem;
+  text-align: left;
+}
+.close h2 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  max-width: 18ch;
+}
+.close :global(.hint) {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    padding-top: 9rem;
+  }
+  .heroShade {
+    background: linear-gradient(
+      180deg,
+      rgb(6 5 22 / 0%) 0%,
+      rgb(6 5 22 / 70%) 34%,
+      rgb(6 5 22 / 95%) 100%
+    );
+  }
+  .demoGrid {
+    grid-template-columns: 1fr;
+  }
+  .demoIntro {
+    position: static;
+  }
+  .how {
+    grid-template-columns: 1fr;
+  }
+  .featureStrand {
+    grid-template-columns: 1fr;
+    padding: 0 0 0 2rem;
+  }
+  .featureStrand::before {
+    left: 0.4rem;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: var(--wire-bright);
+  }
+  .featureStrand + .featureStrand {
+    margin-top: 0;
+  }
+  .featureTag:nth-child(n) .featureBulb {
+    display: block;
+    top: 0.9rem;
+    left: -2rem;
+  }
+}
