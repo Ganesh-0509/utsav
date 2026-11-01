@@ -97,7 +97,11 @@ try {
   await page.locator("#f-budget").pressSequentially("1500000", { delay: 30 });
   await delay(600);
 
-  await page.locator("#f-vibe").pressSequentially("Royal Rajasthani heritage palace celebration with marigold decor", { delay: 25 });
+  await page
+    .locator("#f-vibe")
+    .pressSequentially("Royal Rajasthani heritage palace celebration with marigold decor", {
+      delay: 25,
+    });
   await delay(1200);
 
   // ----------------------------------------------------
@@ -138,7 +142,9 @@ try {
   // 8. Dashboard: Timeline Tab
   // ----------------------------------------------------
   console.log("8. Visiting Timeline Tab (Muhurat & Multi-day schedule)...");
-  const timelineTab = page.locator("#tab-timeline, button[role='tab']:has-text('Timeline')").first();
+  const timelineTab = page
+    .locator("#tab-timeline, button[role='tab']:has-text('Timeline')")
+    .first();
   if (await timelineTab.isVisible()) {
     await timelineTab.click();
     await delay(2500);
@@ -198,7 +204,9 @@ try {
     const assistantInput = page.locator("#assistant-input");
     if (await assistantInput.isVisible()) {
       await assistantInput.click();
-      await assistantInput.pressSequentially("Suggest ideas to welcome guests at Jaipur airport.", { delay: 30 });
+      await assistantInput.pressSequentially("Suggest ideas to welcome guests at Jaipur airport.", {
+        delay: 30,
+      });
       await delay(1200);
 
       const sendBtn = page.locator("button[type='submit']:has-text('Send')").first();
@@ -213,7 +221,9 @@ try {
   // 13. Pan-Indian Localization Demo
   // ----------------------------------------------------
   console.log("13. Demonstrating Pan-Indian Localization...");
-  const langSelect = page.locator("label.lang-switch select, select[aria-label='Language']").first();
+  const langSelect = page
+    .locator("label.lang-switch select, select[aria-label='Language']")
+    .first();
   if (await langSelect.isVisible()) {
     // Switch to Hindi
     console.log("    -> Switching to हिन्दी (Hindi)...");
@@ -251,9 +261,12 @@ try {
     const finalMp4 = path.join(recordingsDir, "utsav-demo.mp4");
     try {
       console.log("Transcoding to MP4 with FFmpeg...");
-      execSync(`ffmpeg -y -i "${videoPath}" -c:v libx264 -preset fast -crf 22 -c:a aac "${finalMp4}"`, {
-        stdio: "inherit",
-      });
+      execSync(
+        `ffmpeg -y -i "${videoPath}" -c:v libx264 -preset fast -crf 22 -c:a aac "${finalMp4}"`,
+        {
+          stdio: "inherit",
+        },
+      );
       console.log("SUCCESS! MP4 video ready at:", finalMp4);
     } catch (e) {
       console.warn("FFmpeg transcoding note:", e.message);
