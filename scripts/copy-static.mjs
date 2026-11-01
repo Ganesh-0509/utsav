@@ -8,3 +8,4 @@ if (fs.existsSync(src)) {
   fs.cpSync(src, dest, { recursive: true });
   console.log(`[postbuild] Copied ${src} -> ${dest}`);
 }
+

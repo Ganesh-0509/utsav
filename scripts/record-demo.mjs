@@ -8,7 +8,9 @@ if (!fs.existsSync(recordingsDir)) {
   fs.mkdirSync(recordingsDir, { recursive: true });
 }
 
-console.log("Starting Playwright demo recording against http://localhost:3000...");
+console.log("==================================================");
+console.log("  Launching Full Utsav Playwright Video Recording ");
+console.log("==================================================");
 
 const browser = await chromium.launch({
   headless: true,
@@ -30,199 +32,213 @@ async function delay(ms) {
 }
 
 try {
+  // ----------------------------------------------------
   // 1. Landing Page Showcase
-  console.log("Navigating to landing page...");
+  // ----------------------------------------------------
+  console.log("1. Visiting landing page at http://localhost:3000...");
   await page.goto("http://localhost:3000", { waitUntil: "networkidle" });
-  await delay(3000);
+  await delay(2500);
 
-  // 2. Describe Input
-  console.log("Typing prompt into describe box...");
-  const describeBox = page.locator("#describe");
-  if (await describeBox.isVisible()) {
-    await describeBox.click();
-    await describeBox.pressSequentially(
-      "My sister's wedding in Jaipur next February, 350 guests, 15 lakh budget, pure veg",
-      { delay: 40 }
-    );
-    await delay(1200);
-
-    const submitBtn = page.locator('button[type="submit"]');
-    await submitBtn.click();
-    await delay(3000);
-  }
-
-  // 3. Wizard Steps (if on wizard)
-  if (page.url().includes("/plan/new")) {
-    console.log("Stepping through wizard...");
-    const nextBtn = page.getByRole("button", { name: /next/i });
-    if (await nextBtn.isVisible()) {
-      await nextBtn.click();
-      await delay(1500);
-    }
-    const nextBtn2 = page.getByRole("button", { name: /next/i });
-    if (await nextBtn2.isVisible()) {
-      await nextBtn2.click();
-      await delay(1500);
-    }
-
-    const titleInput = page.getByLabel(/name of the celebration/i);
-    if (await titleInput.isVisible()) {
-      const val = await titleInput.inputValue();
-      if (!val) await titleInput.fill("Ananya & Rohan");
-    }
-
-    const cityInput = page.getByLabel(/city or town/i);
-    if (await cityInput.isVisible()) {
-      const val = await cityInput.inputValue();
-      if (!val) await cityInput.fill("Jaipur");
-    }
-
-    const dateInput = page.getByLabel(/main date/i);
-    if (await dateInput.isVisible()) {
-      const val = await dateInput.inputValue();
-      if (!val) {
-        const next = new Date();
-        next.setMonth(next.getMonth() + 4);
-        await dateInput.fill(next.toISOString().slice(0, 10));
-      }
-    }
-
-    const guestsInput = page.getByLabel(/number of guests/i);
-    if (await guestsInput.isVisible()) {
-      const val = await guestsInput.inputValue();
-      if (!val) await guestsInput.fill("350");
-    }
-
-    const budgetInput = page.getByLabel(/total budget/i);
-    if (await budgetInput.isVisible()) {
-      const val = await budgetInput.inputValue();
-      if (!val) await budgetInput.fill("15 lakh");
-    }
-
-    await delay(1000);
-    const createBtn = page.getByRole("button", { name: /create my plan/i });
-    if (await createBtn.isVisible()) {
-      await createBtn.click();
-      console.log("Creating plan...");
-      await page.waitForURL(/\/plan\//, { timeout: 35000 });
-      await delay(2500);
-    }
-  }
-
-  // 4. Dashboard Showcase
-  console.log("Showcasing Dashboard overview...");
-  await delay(3000);
-
-  // Scroll smoothly down the overview
-  await page.evaluate(() => window.scrollBy({ top: 350, behavior: "smooth" }));
+  // Smooth scroll down to highlight landing page features and demo strands
+  console.log("   Showcasing landing page features & serial lights...");
+  await page.evaluate(() => window.scrollBy({ top: 400, behavior: "smooth" }));
+  await delay(2000);
+  await page.evaluate(() => window.scrollBy({ top: 450, behavior: "smooth" }));
   await delay(2000);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   await delay(1500);
 
-  // 5. Budget Tab
-  console.log("Visiting Budget tab...");
-  const budgetTab = page.getByRole("tab", { name: /budget/i });
+  // ----------------------------------------------------
+  // 2. Wizard: Step 1 (Event Type)
+  // ----------------------------------------------------
+  console.log("2. Navigating to New Plan Wizard...");
+  const newPlanLink = page.getByRole("link", { name: /new plan/i }).first();
+  await newPlanLink.click();
+  await page.waitForURL("**/plan/new");
+  await delay(1500);
+
+  console.log("   Selecting Wedding celebration...");
+  await page.locator('input[type="radio"][value="wedding"]').check();
+  await delay(1200);
+
+  const nextBtn1 = page.getByRole("button", { name: /next/i });
+  await nextBtn1.click();
+  await delay(1500);
+
+  // ----------------------------------------------------
+  // 3. Wizard: Step 2 (Functions Selection)
+  // ----------------------------------------------------
+  console.log("3. Step 2: Reviewing Indian wedding functions...");
+  await delay(2000);
+
+  const nextBtn2 = page.getByRole("button", { name: /next/i });
+  await nextBtn2.click();
+  await delay(1500);
+
+  // ----------------------------------------------------
+  // 4. Wizard: Step 3 (Celebration Details)
+  // ----------------------------------------------------
+  console.log("4. Step 3: Entering celebration parameters...");
+  await page.locator("#f-title").pressSequentially("Ananya & Rohan's Royal Wedding", { delay: 35 });
+  await delay(600);
+
+  await page.locator("#f-city").pressSequentially("Jaipur", { delay: 40 });
+  await delay(600);
+
+  const future = new Date();
+  future.setMonth(future.getMonth() + 4);
+  const futureStr = future.toISOString().slice(0, 10);
+  await page.locator("#f-date").fill(futureStr);
+  await delay(600);
+
+  await page.locator("#f-guests").fill("350");
+  await delay(600);
+
+  await page.locator("#f-budget").pressSequentially("1500000", { delay: 30 });
+  await delay(600);
+
+  await page.locator("#f-vibe").pressSequentially("Royal Rajasthani heritage palace celebration with marigold decor", { delay: 25 });
+  await delay(1200);
+
+  // ----------------------------------------------------
+  // 5. Creating Plan
+  // ----------------------------------------------------
+  console.log("5. Submitting form to assemble AI celebration plan...");
+  const submitBtn = page.getByRole("button", { name: /create my plan/i });
+  await submitBtn.click();
+
+  await page.waitForURL(/\/plan\/[a-f0-9-]+/, { timeout: 25000 });
+  console.log("   Plan created! Reached Dashboard at:", page.url());
+  await delay(3000);
+
+  // ----------------------------------------------------
+  // 6. Dashboard: Overview Tab
+  // ----------------------------------------------------
+  console.log("6. Showcasing Dashboard Overview...");
+  await page.evaluate(() => window.scrollBy({ top: 350, behavior: "smooth" }));
+  await delay(2500);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  await delay(1500);
+
+  // ----------------------------------------------------
+  // 7. Dashboard: Budget Tab
+  // ----------------------------------------------------
+  console.log("7. Visiting Budget Tab (Exact Rupee Math)...");
+  const budgetTab = page.locator("#tab-budget, button[role='tab']:has-text('Budget')").first();
   if (await budgetTab.isVisible()) {
     await budgetTab.click();
     await delay(2500);
     await page.evaluate(() => window.scrollBy({ top: 300, behavior: "smooth" }));
     await delay(2000);
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-    await delay(1000);
+    await delay(1200);
   }
 
-  // 6. Timeline Tab
-  console.log("Visiting Timeline tab...");
-  const timelineTab = page.getByRole("tab", { name: /timeline/i });
+  // ----------------------------------------------------
+  // 8. Dashboard: Timeline Tab
+  // ----------------------------------------------------
+  console.log("8. Visiting Timeline Tab (Muhurat & Multi-day schedule)...");
+  const timelineTab = page.locator("#tab-timeline, button[role='tab']:has-text('Timeline')").first();
   if (await timelineTab.isVisible()) {
     await timelineTab.click();
     await delay(2500);
     await page.evaluate(() => window.scrollBy({ top: 300, behavior: "smooth" }));
     await delay(2000);
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-    await delay(1000);
+    await delay(1200);
   }
 
-  // 7. Vendors Tab
-  console.log("Visiting Vendors tab...");
-  const vendorsTab = page.getByRole("tab", { name: /vendors/i });
+  // ----------------------------------------------------
+  // 9. Dashboard: Vendors Tab
+  // ----------------------------------------------------
+  console.log("9. Visiting Vendors Tab (Checklists & Contacts)...");
+  const vendorsTab = page.locator("#tab-vendors, button[role='tab']:has-text('Vendors')").first();
   if (await vendorsTab.isVisible()) {
     await vendorsTab.click();
     await delay(2500);
     await page.evaluate(() => window.scrollBy({ top: 300, behavior: "smooth" }));
     await delay(2000);
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-    await delay(1000);
+    await delay(1200);
   }
 
-  // 8. Ideas Tab
-  console.log("Visiting Ideas tab...");
-  const ideasTab = page.getByRole("tab", { name: /ideas/i });
+  // ----------------------------------------------------
+  // 10. Dashboard: Ideas Tab
+  // ----------------------------------------------------
+  console.log("10. Visiting Ideas Tab (Grounding & Cultural Themes)...");
+  const ideasTab = page.locator("#tab-ideas, button[role='tab']:has-text('Ideas')").first();
   if (await ideasTab.isVisible()) {
     await ideasTab.click();
     await delay(2500);
-    await page.evaluate(() => window.scrollBy({ top: 300, behavior: "smooth" }));
+    await page.evaluate(() => window.scrollBy({ top: 250, behavior: "smooth" }));
     await delay(2000);
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "smooth" }));
-    await delay(1000);
+    await delay(1200);
   }
 
-  // 9. Guests Tab
-  console.log("Visiting Guests tab...");
-  const guestsTab = page.getByRole("tab", { name: /guests/i });
+  // ----------------------------------------------------
+  // 11. Dashboard: Guests Tab
+  // ----------------------------------------------------
+  console.log("11. Visiting Guests Tab...");
+  const guestsTab = page.locator("#tab-guests, button[role='tab']:has-text('Guests')").first();
   if (await guestsTab.isVisible()) {
     await guestsTab.click();
     await delay(2500);
   }
 
-  // 10. AI Assistant Chat
-  console.log("Engaging Planning Assistant...");
-  const assistantBtn = page.getByRole("button", { name: /assistant/i });
+  // ----------------------------------------------------
+  // 12. Interactive GenAI Planning Assistant
+  // ----------------------------------------------------
+  console.log("12. Engaging GenAI Planning Assistant...");
+  const assistantBtn = page.locator("button:has-text('Assistant')").first();
   if (await assistantBtn.isVisible()) {
     await assistantBtn.click();
-    await delay(1500);
-  }
+    await delay(2000);
 
-  const assistantTextarea = page.locator("#assistant-input");
-  if (await assistantTextarea.isVisible()) {
-    await assistantTextarea.click();
-    await assistantTextarea.pressSequentially("Suggest a grand royal theme for Reception.", { delay: 35 });
-    await delay(1000);
-    const sendBtn = page.locator('button[type="submit"]', { hasText: /send/i });
-    if (await sendBtn.isVisible()) {
-      await sendBtn.click();
-      await delay(4000);
+    const assistantInput = page.locator("#assistant-input");
+    if (await assistantInput.isVisible()) {
+      await assistantInput.click();
+      await assistantInput.pressSequentially("Suggest ideas to welcome guests at Jaipur airport.", { delay: 30 });
+      await delay(1200);
+
+      const sendBtn = page.locator("button[type='submit']:has-text('Send')").first();
+      if (await sendBtn.isVisible()) {
+        await sendBtn.click();
+        await delay(4500);
+      }
     }
   }
 
-  // 11. Multi-Language Demonstrations
-  console.log("Demonstrating multi-language localization...");
-  const langSelect = page.locator("label.lang-switch select, select[aria-label='Language']");
+  // ----------------------------------------------------
+  // 13. Pan-Indian Localization Demo
+  // ----------------------------------------------------
+  console.log("13. Demonstrating Pan-Indian Localization...");
+  const langSelect = page.locator("label.lang-switch select, select[aria-label='Language']").first();
   if (await langSelect.isVisible()) {
-    // Hindi
-    console.log("Switching to Hindi...");
+    // Switch to Hindi
+    console.log("    -> Switching to हिन्दी (Hindi)...");
     await langSelect.selectOption("hi");
     await delay(2500);
 
-    // Tamil
-    console.log("Switching to Tamil...");
+    // Switch to Tamil
+    console.log("    -> Switching to தமிழ் (Tamil)...");
     await langSelect.selectOption("ta");
     await delay(2500);
 
-    // Telugu
-    console.log("Switching to Telugu...");
+    // Switch to Telugu
+    console.log("    -> Switching to తెలుగు (Telugu)...");
     await langSelect.selectOption("te");
     await delay(2500);
 
-    // Back to English
-    console.log("Switching back to English...");
+    // Switch back to English
+    console.log("    -> Switching back to English...");
     await langSelect.selectOption("en");
     await delay(2000);
   }
 
-  console.log("Recording complete. Finalizing video...");
+  console.log("Demo walkthrough completed successfully!");
 } catch (err) {
-  console.error("Recording step error:", err);
+  console.error("Recording error:", err);
 } finally {
   const video = page.video();
   await page.close();
@@ -231,17 +247,16 @@ try {
 
   if (video) {
     const videoPath = await video.path();
-    console.log("Video saved to:", videoPath);
+    console.log("Raw video recorded at:", videoPath);
     const finalMp4 = path.join(recordingsDir, "utsav-demo.mp4");
     try {
-      console.log("Transcoding to MP4 with ffmpeg...");
+      console.log("Transcoding to MP4 with FFmpeg...");
       execSync(`ffmpeg -y -i "${videoPath}" -c:v libx264 -preset fast -crf 22 -c:a aac "${finalMp4}"`, {
         stdio: "inherit",
       });
-      console.log("MP4 demo ready at:", finalMp4);
+      console.log("SUCCESS! MP4 video ready at:", finalMp4);
     } catch (e) {
-      console.warn("Could not transcode with ffmpeg, keeping webm:", e.message);
+      console.warn("FFmpeg transcoding note:", e.message);
     }
   }
 }
-
