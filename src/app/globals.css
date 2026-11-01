@@ -38,6 +38,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scrollbar-color: var(--wire-bright) var(--night);
+  overflow-x: clip;
 }
 
 body {
@@ -49,6 +50,7 @@ body {
   line-height: 1.6;
   font-variant-numeric: tabular-nums;
   caret-color: var(--amber);
+  overflow-x: clip;
 }
 
 ::selection {
@@ -310,6 +312,7 @@ optgroup {
   color: var(--ink-2);
   border: 1px solid var(--wire);
   white-space: nowrap;
+  max-width: 100%;
 }
 .badge-good {
   color: var(--leaf);
